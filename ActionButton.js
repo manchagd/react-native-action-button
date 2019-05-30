@@ -195,8 +195,8 @@ export default class ActionButton extends Component {
     return (
       <View style={[
         parentStyle,
-        !this.props.hideShadow && shadowStyle,
-        !this.props.hideShadow && this.props.shadowStyle
+        !isAndroid && !this.props.hideShadow && shadowStyle,
+        !isAndroid && !this.props.hideShadow && this.props.shadowStyle
       ]}
       >
         <Touchable
@@ -217,7 +217,11 @@ export default class ActionButton extends Component {
           onPressOut={this.props.onPressOut}
         >
           <Animated.View
-            style={wrapperStyle}
+            style={[
+              wrapperStyle,
+              isAndroid && !this.props.hideShadow && shadowStyle,
+              isAndroid && !this.props.hideShadow && this.props.shadowStyle
+            ]}
           >
             <Animated.View style={[buttonStyle, animatedViewStyle]}>
               {this._renderButtonIcon()}
