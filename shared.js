@@ -7,14 +7,14 @@ import {
 export const DEFAULT_ACTIVE_OPACITY = 0.85;
 
 export const shadowStyle = {
-  shadowOpacity: 0.35,
+  shadowColor: "#000",
   shadowOffset: {
     width: 0,
-    height: 5
+    height: 1,
   },
-  shadowColor: "#000",
-  shadowRadius: 3,
-  elevation: 5
+  shadowOpacity: 0.18,
+  shadowRadius: 1.00,
+  elevation: 2,
 };
 
 export const alignItemsMap = {

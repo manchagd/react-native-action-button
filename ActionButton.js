@@ -124,19 +124,6 @@ export default class ActionButton extends Component {
             this.getOverlayStyles(),
             this.getOrientation(),
             this.getOffsetXY(),
-            (isAndroid 
-            ? {
-              elevation: 3,
-            }
-            : {
-              shadowColor: Colors.black,
-              shadowOffset: {
-                width: 0,
-                height: 1,
-              },
-              shadowOpacity: 0.18,
-              shadowRadius: 1.00,
-            }),
           ]}
         >
           {this.state.active &&
@@ -424,6 +411,7 @@ ActionButton.defaultProps = {
   size: 56,
   verticalOrientation: "up",
   backgroundTappable: false,
+  hideShadow: false,
   useNativeFeedback: true,
   activeOpacity: DEFAULT_ACTIVE_OPACITY,
   fixNativeFeedbackRadius: false,
