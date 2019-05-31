@@ -150,6 +150,12 @@ export default class ActionButton extends Component {
             this.getOrientation(),
             this.getOffsetXY(),
             this.getActionPositioning(),
+            /*
+            {
+              borderWidth: 1,
+              borderColor: "#A3e",
+            }
+            */
           ]}
         >
           {this.state.active &&
@@ -307,6 +313,10 @@ export default class ActionButton extends Component {
       paddingVertical: (actionItemsOrientation === "up" || actionItemsOrientation === "down") ? this.props.spacing : 0,
       paddingHorizontal: (actionItemsOrientation === "right" || actionItemsOrientation === "left") ? this.props.spacing : 0,
       zIndex: this.props.zIndex,
+      /*  
+      borderWidth: 1,
+      borderColor: "#00FF00",
+      */
     };
 
     return (

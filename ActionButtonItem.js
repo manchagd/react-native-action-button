@@ -94,6 +94,10 @@ export default class ActionButtonItem extends Component {
       height: size,
       borderRadius: size / 2,
       backgroundColor: this.props.buttonColor || this.props.btnColor,
+      /*
+      borderWidth: 1,
+      borderColor: "#B09",
+      */
     };
 /*
     if (position !== "center")
@@ -112,6 +116,10 @@ export default class ActionButtonItem extends Component {
       : {
           margin: spacing,
           height: size,
+          /*
+          borderWidth: 1,
+          borderColor: "#0FF0F0",
+          */
         };
     return (
       <Animated.View
