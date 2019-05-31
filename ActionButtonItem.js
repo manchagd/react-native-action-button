@@ -52,7 +52,7 @@ export default class ActionButtonItem extends Component {
     const {
       size,
       position,
-      verticalOrientation,
+      actionItemsOrientation,
       hideShadow,
       spacing
     } = this.props;
@@ -60,7 +60,7 @@ export default class ActionButtonItem extends Component {
     if (!this.props.active) return null;
 
     const animatedViewStyle = {
-      marginBottom: -SHADOW_SPACE,
+      //marginBottom: -SHADOW_SPACE,
       alignItems: alignItemsMap[position],
 
       // backgroundColor: this.props.buttonColor,
@@ -69,7 +69,19 @@ export default class ActionButtonItem extends Component {
         {
           translateY: this.props.anim.interpolate({
             inputRange: [0, 1],
-            outputRange: [verticalOrientation === "down" ? -40 : 40, 0]
+            outputRange: [
+              actionItemsOrientation === "down" ? -40 
+              : actionItemsOrientation === "up" ? 40 : 0
+              , 0]
+          })
+        },
+        {  
+          translateX: this.props.anim.interpolate({
+            inputRange: [0, 1],
+            outputRange: [
+              actionItemsOrientation === "right" ? -40 
+              : actionItemsOrientation === "left" ? 40 : 0
+              , 0]
           })
         }
       ]
@@ -81,12 +93,12 @@ export default class ActionButtonItem extends Component {
       width: size,
       height: size,
       borderRadius: size / 2,
-      backgroundColor: this.props.buttonColor || this.props.btnColor
+      backgroundColor: this.props.buttonColor || this.props.btnColor,
     };
-
+/*
     if (position !== "center")
       buttonStyle[position] = (this.props.parentSize - size) / 2;
-
+*/
     const Touchable = getTouchableComponent(this.props.useNativeFeedback);
 
     const parentStyle = isAndroid &&
@@ -98,13 +110,20 @@ export default class ActionButtonItem extends Component {
           borderRadius: this.props.size / 2
         }
       : {
-          paddingHorizontal: this.props.offsetX,
-          height: size + SHADOW_SPACE + spacing
+          margin: spacing,
+          height: size,
         };
     return (
       <Animated.View
         pointerEvents="box-none"
-        style={[animatedViewStyle, parentStyle]}
+        style={[
+          animatedViewStyle, 
+          parentStyle,
+          {
+            justifyContent: "center",
+            alignItems: "center",
+          }
+        ]}
       >
         <View>
           <Touchable

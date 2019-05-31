@@ -19,8 +19,10 @@ export const shadowStyle = {
 
 export const alignItemsMap = {
   center: "center",
-  left: "flex-start",
-  right: "flex-end"
+  topLeft: "flex-start",
+  topRight: "flex-end",
+  bottomLeft: "flex-start",
+  bottomRight: "flex-end"
 };
 
 export const isAndroid = Platform.OS === "android";

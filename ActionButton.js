@@ -70,25 +70,50 @@ export default class ActionButton extends Component {
   //////////////////////
 
   getOrientation() {
-    return { alignItems: alignItemsMap[this.props.position] };
+    return { 
+      alignItems: alignItemsMap[this.props.position],
+      alignContent: "baseline",
+    };
   }
-
+  
   getOffsetXY() {
     return {
-      // paddingHorizontal: this.props.offsetX,
-      paddingVertical: this.props.offsetY
+      paddingVertical: this.props.offsetY,
+      paddingHorizontal: this.props.offsetX,
     };
   }
 
+  getActionPositioning() {
+    return {
+      flexDirection: (this.props.actionItemsOrientation === "right" || 
+        this.props.actionItemsOrientation === "left")
+        ? "row"
+        : "column",
+      alignItems: this.props.position === "center"
+        ? "center"
+        : this.props.position === "topLeft"
+        ? "flex-start"
+        : this.props.position === "bottomLeft"
+        ? this.props.actionItemsOrientation === "up" ? "flex-start" : "flex-end"
+        : this.props.position === "bottomRight"
+        ? "flex-end"
+        : this.props.position === "topRight"
+        ? this.props.actionItemsOrientation === "left" ? "flex-start" : "flex-end"
+        : "flex-start"
+         
+    };
+  }
+  
   getOverlayStyles() {
     return [
       styles.overlay,
       {
         elevation: this.props.elevation,
         zIndex: this.props.zIndex,
-        justifyContent: this.props.verticalOrientation === "up"
-          ? "flex-end"
-          : "flex-start"
+        justifyContent: (this.props.actionItemsOrientation === "right" || 
+          this.props.actionItemsOrientation === "down")
+          ? "flex-start"
+          : "flex-end"
       }
     ];
   }
@@ -124,17 +149,20 @@ export default class ActionButton extends Component {
             this.getOverlayStyles(),
             this.getOrientation(),
             this.getOffsetXY(),
+            this.getActionPositioning(),
           ]}
         >
           {this.state.active &&
-            !this.props.backgroundTappable &&
+            this.props.backgroundTappable &&
             this._renderTappableBackground()}
 
-          {this.props.verticalOrientation === "up" &&
+          {(this.props.actionItemsOrientation === "up" || 
+            this.props.actionItemsOrientation === "left") &&
             this.props.children &&
             this._renderActions()}
           {this._renderMainButton()}
-          {this.props.verticalOrientation === "down" &&
+          {(this.props.actionItemsOrientation === "down" || 
+            this.props.actionItemsOrientation === "right") &&
             this.props.children &&
             this._renderActions()}
         </View>
@@ -190,13 +218,15 @@ export default class ActionButton extends Component {
           borderRadius: this.props.size / 2,
           width: this.props.size
         }
-      : { marginHorizontal: this.props.offsetX, zIndex: this.props.zIndex };
+      : { 
+          zIndex: this.props.zIndex 
+        };
 
     return (
       <View style={[
         parentStyle,
         !isAndroid && !this.props.hideShadow && shadowStyle,
-        !isAndroid && !this.props.hideShadow && this.props.shadowStyle
+        !isAndroid && !this.props.hideShadow && this.props.shadowStyle,
       ]}
       >
         <Touchable
@@ -261,7 +291,7 @@ export default class ActionButton extends Component {
   }
 
   _renderActions() {
-    const { children, verticalOrientation } = this.props;
+    const { children, actionItemsOrientation } = this.props;
 
     if (!this.state.active) return null;
 
@@ -273,15 +303,19 @@ export default class ActionButton extends Component {
       flex: 1,
       alignSelf: "stretch",
       // backgroundColor: 'purple',
-      justifyContent: verticalOrientation === "up" ? "flex-end" : "flex-start",
-      paddingTop: this.props.verticalOrientation === "down"
-        ? this.props.spacing
-        : 0,
-      zIndex: this.props.zIndex
+      justifyContent: (actionItemsOrientation === "up" || actionItemsOrientation === "left") ? "flex-end" : "flex-start",
+      paddingVertical: (actionItemsOrientation === "up" || actionItemsOrientation === "down") ? this.props.spacing : 0,
+      paddingHorizontal: (actionItemsOrientation === "right" || actionItemsOrientation === "left") ? this.props.spacing : 0,
+      zIndex: this.props.zIndex,
     };
 
     return (
-      <View style={actionStyle} pointerEvents={"box-none"}>
+      <View style={[
+        actionStyle,
+        this.getActionPositioning(),
+        ]} 
+        pointerEvents={"box-none"}
+      >
         {actionButtons.map((ActionButton, idx) => (
           <ActionButtonItem
             key={idx}
@@ -351,7 +385,11 @@ ActionButton.propTypes = {
   resetToken: PropTypes.any,
   active: PropTypes.bool,
 
-  position: PropTypes.string,
+  position: PropTypes.oneOf([
+    "topLeft", "topRight", 
+    "bottomLeft", "bottomRight", 
+    "center"
+  ]),
   elevation: PropTypes.number,
   zIndex: PropTypes.number,
 
@@ -380,7 +418,7 @@ ActionButton.propTypes = {
   onPressOut: PropTypes.func,
   backdrop: PropTypes.oneOfType([PropTypes.bool, PropTypes.object]),
   degrees: PropTypes.number,
-  verticalOrientation: PropTypes.oneOf(["up", "down"]),
+  actionItemsOrientation: PropTypes.oneOf(["up", "down", "right", "left"]),
   backgroundTappable: PropTypes.bool,
   activeOpacity: PropTypes.number,
 
@@ -401,7 +439,7 @@ ActionButton.defaultProps = {
   buttonColor: "rgba(0,0,0,1)",
   buttonTextStyle: {},
   buttonText: "+",
-  spacing: 20,
+  spacing: 5,
   outRangeScale: 1,
   autoInactive: true,
   onPress: () => {},
@@ -410,10 +448,10 @@ ActionButton.defaultProps = {
   backdrop: false,
   degrees: 45,
   position: "right",
-  offsetX: 30,
-  offsetY: 30,
+  offsetX: 25,
+  offsetY: 25,
   size: 56,
-  verticalOrientation: "up",
+  actionItemsOrientation: "up",
   backgroundTappable: false,
   hideShadow: false,
   useNativeFeedback: true,
